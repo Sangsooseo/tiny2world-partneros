@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로그인 - 사직인생 PartnerOS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+<h1 class="text-3xl font-bold text-center mb-2">PartnerOS</h1>
+<p class="text-center text-gray-500 mb-8">사직인생 대리점·관리 시스템</p>
+<div class="space-y-4">
+<input id="email" placeholder="이메일" class="w-full p-4 border rounded-xl text-lg">
+<input id="password" type="password" placeholder="비밀번호" class="w-full p-4 border rounded-xl text-lg">
+<button onclick="login()" class="w-full py-4 bg-blue-600 text-white font-bold text-lg rounded-xl">
+로그인
+</button>
+</div>
+<div class="mt-6 text-sm text-gray-500 text-center">
+<p>사장님: owner@sajikinseang.com / admin1234</p>
+<p>영업사원: hong@example.com / hong1234</p>
+</div>
+</div>
+<script>
+const API = 'https://tiny2world-partneros-api.bizsuccessweb.workers.dev';
+async function login() {
+const email = document.getElementById('email').value.trim();
+const password = document.getElementById('password').value;
+if (!email || !password) return alert('이메일과 비밀번호를 입력하세요');
+const res = await fetch(API+'/login', {
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body: JSON.stringify({email, password})
+});
+const j = await res.json();
+if (j.success) {
+localStorage.setItem('partner', JSON.stringify(j.partner));
+if (j.partner.role === 'owner') location.href = '/admin.html';
+else location.href = '/sales.html';
+} else {
+alert('로그인 실패: ' + (j.error || '이메일/비밀번호를 확인하세요'));
+}
+}
+document.getElementById('password').addEventListener('keydown', e=>{
+if (e.key==='Enter') login();
+});
+</script>
+</body>
+</html>
+64
+사직인생 PartnerOS · 대리점 · 어필리에이트 올인원 키트
